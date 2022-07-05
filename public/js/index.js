@@ -39,7 +39,6 @@ function startChat() {
   });
 
   socket.on('message', (data) => {
-
     let messageBox = document.createElement('li');
     let nickname = document.createElement('span');
 
@@ -55,6 +54,8 @@ function startChat() {
     }
 
     nickname.textContent = data.nickname;
+    nickname.style.color = data.color;
+    
     text.textContent = data.message.text;
     date.textContent = formatDate(data.message.date);
 

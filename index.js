@@ -1,6 +1,7 @@
 const express = require('express');
-const http = require('node:http')
-const { Server  } = require('socket.io')
+const http = require('node:http');
+const { Server  } = require('socket.io');
+const { getRandomColor } =  require('./utils');
 
 const app = express();
 const PORT = 3000;
@@ -18,10 +19,12 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
- 
   const user = {
     nickname: socket.handshake.query.nickname,
+    color: getRandomColor()
   }
+
+  socket.user = user;
 
   connectedUsers[user] = socket;
   console.log(`${socket.handshake.query.nickname} joined the chat`)
@@ -33,7 +36,8 @@ io.on('connection', (socket) => {
   socket.on('message', (msg) => {
     const data = {
       id: socket.id,
-      nickname: socket.handshake.query.nickname,
+      nickname: socket.user.nickname,
+      color: socket.user.color,
       message: {
         text: msg.text,
         date: msg.date
